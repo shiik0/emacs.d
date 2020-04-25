@@ -58,6 +58,7 @@
                       projectile
                       rainbow-mode
                       rjsx-mode
+                      rust-mode
                       ob-restclient
                       org-bullets
                       restclient

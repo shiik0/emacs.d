@@ -76,6 +76,7 @@ mode to help me organize all of the configuration needed
                         projectile
                         rainbow-mode
                         rjsx-mode
+                        rust-mode
                         ob-restclient
                         org-bullets
                         restclient
@@ -108,7 +109,7 @@ mode to help me organize all of the configuration needed
 
 
 * Theme & other configurations
-
+  
 ** Configure zen-mode theme
 #+BEGIN_SRC emacs-lisp
   (defun zen-mode ()
