@@ -14,6 +14,7 @@
                       browse-kill-ring
                       comment-tags
                       company
+                      company-lsp
                       dashboard
                       dired-narrow
                       diminish
@@ -196,6 +197,7 @@
 (add-hook 'org-mode-hook 'which-key-mode)
 
 (ac-config-default)
+(setq lsp-ui-doc-enable nil)
 
 (setq-default tab-width 2)
 
@@ -267,6 +269,8 @@
 
 (add-hook 'rust-mode-hook #'flycheck-rust-setup)
 
+(add-hook 'c-mode #'lsp)
+
 (add-hook 'prog-mode-hook 'rainbow-mode)
 
 (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
@@ -302,33 +306,35 @@
 
 (eyebrowse-mode t)
 
-(defhydra hydra-projectile (global-map "C-c p")
+(defhydra hydra-projectile (global-map "C-c p"
+                            :columns 3
+                            :exit t)
   "Projectile"
-  ("a" projectile-ag)
-  ("b" projectile-switch-to-buffer)
-  ("c" projectile-invalidate-cache)
-  ("d" projectile-find-dir)
-  ("f" projectile-find-file)
-  ("s" projectile-switch-project))
+  ("a" projectile-ag                "Silver Searcher" ) 
+  ("b" projectile-switch-to-buffer  "Buffers"         )
+  ("c" projectile-invalidate-cache  "Invalidate Cache")
+  ("d" projectile-find-dir          "Find directory"  )
+  ("f" projectile-find-file         "Find file"       )
+  ("s" projectile-switch-project    "Switch project"  )
+)
 
-(defhydra hydra-eyebrowse (global-map "C-c w")
+(defhydra hydra-eyebrowse (global-map "C-c w"
+                           :columns 3
+                           :exit t)
   "Eyebrowse"
-    ("p" eyebrowse-prev-window-config nil)
-    ("n" eyebrowse-next-window-config nil)
-    ("l" eyebrowse-last-window-config nil)
-    ("r" eyebrowse-rename-window-config nil)
-    ("c" eyebrowse-create-window-config nil)
-    ("C" eyebrowse-close-window-config nil)
-    ("0" eyebrowse-switch-to-window-config-0 nil)
-    ("1" eyebrowse-switch-to-window-config-1 nil)
-    ("2" eyebrowse-switch-to-window-config-2 nil)
-    ("3" eyebrowse-switch-to-window-config-3 nil)
-    ("4" eyebrowse-switch-to-window-config-4 nil)
-    ("5" eyebrowse-switch-to-window-config-5 nil)
-    ("6" eyebrowse-switch-to-window-config-6 nil)
-    ("7" eyebrowse-switch-to-window-config-7 nil)
-    ("8" eyebrowse-switch-to-window-config-8 nil)
-    ("9" eyebrowse-switch-to-window-config-9 nil))
+    ("p" eyebrowse-prev-window-config             "Previous window"   )
+    ("n" eyebrowse-next-window-config             "Next window"       )
+    ("l" eyebrowse-last-window-config             "Last window"       )
+    ("r" eyebrowse-rename-window-config           "Rename window"     )
+    ("c" eyebrowse-create-window-config           "Create window"     )
+    ("C" eyebrowse-close-window-config            "Close window"      )
+    ("0" eyebrowse-switch-to-window-config-0      "0"                 )
+    ("1" eyebrowse-switch-to-window-config-1      "1"                 )
+    ("2" eyebrowse-switch-to-window-config-2      "2"                 )
+    ("3" eyebrowse-switch-to-window-config-3      "3"                 )
+    ("4" eyebrowse-switch-to-window-config-4      "4"                 )
+    ("5" eyebrowse-switch-to-window-config-5      "5"                 )
+  )
 
 (evil-mode t)
 ;; Enable "M-x" in evil mode
