@@ -696,6 +696,11 @@ Show assigned issues and PRs directly in the status buffer:
      #+END_SRC
      
      
+** Dumb Jump
+   #+BEGIN_SRC emacs-lisp
+     (dumb-jump-mode)
+     (setq dumb-jump-selector 'ivy)
+   #+END_SRC
 ** EyeBrowse
 
 #+BEGIN_SRC emacs-lisp

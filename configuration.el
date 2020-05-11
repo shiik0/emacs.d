@@ -304,6 +304,9 @@
 (setq projectile-project-search-path '("~/Projects/"))
 (projectile-mode +1)
 
+(dumb-jump-mode)
+(setq dumb-jump-selector 'ivy)
+
 (eyebrowse-mode t)
 
 (defhydra hydra-projectile (global-map "C-c p"
