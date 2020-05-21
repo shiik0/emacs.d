@@ -16,7 +16,7 @@ image-dired
 ido.last
 .cache/
 .emacs_workgroups
-.lsp-sessions-v1
+.lsp-session-v1
 /persp-confs
 projectile-bookmarks.eld
 /smex-items
