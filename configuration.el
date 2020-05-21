@@ -205,6 +205,12 @@
 (define-key dired-mode-map "j" 'dired-next-line)
 (define-key dired-mode-map "k" 'dired-previous-line)
 (define-key dired-mode-map (kbd "<tab>") 'dired-subtree-toggle)
+(define-key dired-mode-map (kbd "<C-tab") 'dired-subtree-cycle)
+(define-key dired-mode-map (kbd "<S-iso-lefttab") 'dired-subtree-remove)
+(define-key dired-mode-map "p"
+    (lambda ()
+      (interactive)
+      (find-alternate-file "..")))
 
 (ac-config-default)
 (setq lsp-ui-doc-enable nil)

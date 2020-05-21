@@ -369,6 +369,12 @@ Whenever the window scrolls a light will shine on top of your cursor so you know
       (define-key dired-mode-map "j" 'dired-next-line)
       (define-key dired-mode-map "k" 'dired-previous-line)
       (define-key dired-mode-map (kbd "<tab>") 'dired-subtree-toggle)
+      (define-key dired-mode-map (kbd "<C-tab") 'dired-subtree-cycle)
+      (define-key dired-mode-map (kbd "<S-iso-lefttab") 'dired-subtree-remove)
+      (define-key dired-mode-map "p"
+          (lambda ()
+            (interactive)
+            (find-alternate-file "..")))
   #+END_SRC
 
 
