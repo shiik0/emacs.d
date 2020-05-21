@@ -33,7 +33,9 @@ mode to help me organize all of the configuration needed
                         comment-tags
                         company
                         company-lsp
+                        dap-mode
                         dashboard
+                        dired-subtree
                         dired-narrow
                         diminish
                         doom-modeline
@@ -49,11 +51,12 @@ mode to help me organize all of the configuration needed
                         evil-numbers
                         evil-surround
                         enh-ruby-mode
-                        erc-image
                         exec-path-from-shell
                         eyebrowse
+                        exunit
                         forge
                         flycheck
+                        flycheck-credo
                         flycheck-flow
                         flycheck-rust
                         ghub
@@ -67,6 +70,7 @@ mode to help me organize all of the configuration needed
                         js2-mode
                         js2-refactor
                         lsp-mode
+                        lsp-ui
                         magit
                         markdown-mode
                         neotree
@@ -168,6 +172,8 @@ mode to help me organize all of the configuration needed
 (setq doom-modeline-project-detection 'projectile)
 
 #+END_SRC
+** LSP configuration
+*** LSP UI
 
 
 * Dashboard
@@ -355,6 +361,15 @@ Whenever the window scrolls a light will shine on top of your cursor so you know
 #+BEGIN_SRC emacs-lisp
   (add-hook 'org-mode-hook 'which-key-mode)
 #+END_SRC
+
+** Dired mode
+  #+BEGIN_SRC emacs-lisp
+      (setq dired-mode-map (make-keymap))
+      (suppress-keymap dired-mode-map)
+      (define-key dired-mode-map "j" 'dired-next-line)
+      (define-key dired-mode-map "k" 'dired-previous-line)
+      (define-key dired-mode-map (kbd "<tab>") 'dired-subtree-toggle)
+  #+END_SRC
 
 
 * Programming
@@ -581,14 +596,23 @@ blocks.
 
 ** Rust
   #+BEGIN_SRC emacs-lisp
+   (add-hook 'rust-mode-hook #'lsp)
    (add-hook 'rust-mode-hook #'flycheck-rust-setup)
   #+END_SRC
 ** C
   #+BEGIN_SRC emacs-lisp
-   (add-hook 'c-mode #'lsp) 
+   (add-hook 'c-mode-hook #'lsp) 
   #+END_SRC
  
 ** Elixir
+   
+  #+BEGIN_SRC emacs-lisp
+    (add-to-list 'exec-path "~/Projects/opensource/elixir-ls/release")
+    (add-hook 'elixir-mode-hook #'lsp)
+    (add-hook 'elixir-mode-hook #'smartparens-mode)
+    (add-hook 'elixir-mode-hook 'flycheck-mode)
+  #+END_SRC
+
 ** Web
 *** rainbow-mode
 
@@ -748,7 +772,7 @@ Show assigned issues and PRs directly in the status buffer:
         )
     #+END_SRC
 
-
+ 
 * Evil
 
 This are the general configurations for the Evil Mode

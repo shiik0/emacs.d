@@ -15,7 +15,9 @@
                       comment-tags
                       company
                       company-lsp
+                      dap-mode
                       dashboard
+                      dired-subtree
                       dired-narrow
                       diminish
                       doom-modeline
@@ -31,11 +33,12 @@
                       evil-numbers
                       evil-surround
                       enh-ruby-mode
-                      erc-image
                       exec-path-from-shell
                       eyebrowse
+                      exunit
                       forge
                       flycheck
+                      flycheck-credo
                       flycheck-flow
                       flycheck-rust
                       ghub
@@ -49,6 +52,7 @@
                       js2-mode
                       js2-refactor
                       lsp-mode
+                      lsp-ui
                       magit
                       markdown-mode
                       neotree
@@ -196,6 +200,12 @@
 
 (add-hook 'org-mode-hook 'which-key-mode)
 
+(setq dired-mode-map (make-keymap))
+(suppress-keymap dired-mode-map)
+(define-key dired-mode-map "j" 'dired-next-line)
+(define-key dired-mode-map "k" 'dired-previous-line)
+(define-key dired-mode-map (kbd "<tab>") 'dired-subtree-toggle)
+
 (ac-config-default)
 (setq lsp-ui-doc-enable nil)
 
@@ -267,9 +277,15 @@
 (setq js2-highlight-level 3)
 (setq js-indent-level 2)
 
+(add-hook 'rust-mode-hook #'lsp)
 (add-hook 'rust-mode-hook #'flycheck-rust-setup)
 
-(add-hook 'c-mode #'lsp)
+(add-hook 'c-mode-hook #'lsp)
+
+(add-to-list 'exec-path "~/Projects/opensource/elixir-ls/release")
+(add-hook 'elixir-mode-hook #'lsp)
+(add-hook 'elixir-mode-hook #'smartparens-mode)
+(add-hook 'elixir-mode-hook 'flycheck-mode)
 
 (add-hook 'prog-mode-hook 'rainbow-mode)
 
