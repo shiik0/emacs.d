@@ -14,7 +14,6 @@
                       browse-kill-ring
                       comment-tags
                       company
-                      company-lsp
                       dap-mode
                       dashboard
                       dired-subtree
@@ -23,6 +22,7 @@
                       doom-modeline
                       dumb-jump
                       editorconfig
+                      eglot
                       elfeed
                       elfeed-goodies
                       elixir-mode
@@ -51,8 +51,6 @@
                       json-mode
                       js2-mode
                       js2-refactor
-                      lsp-mode
-                      lsp-ui
                       magit
                       markdown-mode
                       neotree
@@ -213,7 +211,6 @@
       (find-alternate-file "..")))
 
 (ac-config-default)
-(setq lsp-ui-doc-enable nil)
 
 (setq-default tab-width 2)
 
@@ -283,15 +280,16 @@
 (setq js2-highlight-level 3)
 (setq js-indent-level 2)
 
-(add-hook 'rust-mode-hook #'lsp)
+(add-hook 'rust-mode-hook 'eglot-ensure)
 (add-hook 'rust-mode-hook #'flycheck-rust-setup)
 
-(add-hook 'c-mode-hook #'lsp)
+(require 'eglot)
+(add-to-list 'eglot-server-programs '((c-mode) "clangd"))
+(add-hook 'c-mode-hook 'eglot-ensure)
 
-(add-to-list 'exec-path "~/Projects/opensource/elixir-ls/release")
-(add-hook 'elixir-mode-hook #'lsp)
-(add-hook 'elixir-mode-hook #'smartparens-mode)
-(add-hook 'elixir-mode-hook 'flycheck-mode)
+(require 'eglot)
+(add-hook 'elixir-mode-hook 'eglot-ensure)
+(add-to-list 'eglot-server-programs '(elixir-mode "~/Projects/opensource/elixir-ls/release/language_server.sh"))
 
 (add-hook 'prog-mode-hook 'rainbow-mode)
 
