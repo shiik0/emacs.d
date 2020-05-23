@@ -92,6 +92,7 @@ mode to help me organize all of the configuration needed
                         synosaurus
                         tide
                         visual-fill-column
+                        vterm
                         web-mode
                         which-key
                         writegood-mode

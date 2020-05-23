@@ -74,6 +74,7 @@
                       synosaurus
                       tide
                       visual-fill-column
+                      vterm
                       web-mode
                       which-key
                       writegood-mode
@@ -278,7 +279,6 @@
 
 (add-to-list 'auto-mode-alist '("\\.js\\'" . rjsx-mode))
 (add-hook 'js-mode-hook 'js2-minor-mode)
-(add-hook 'js-mode-hook 'eglot-ensure)
 (setq js2-highlight-level 3)
 (setq js-indent-level 2)
 
