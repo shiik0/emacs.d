@@ -66,6 +66,7 @@
                       org-bullets
                       restclient
                       robe
+                      rspec-mode
                       rust-mode
                       sass-mode
                       smartparens
@@ -277,6 +278,7 @@
 
 (add-to-list 'auto-mode-alist '("\\.js\\'" . rjsx-mode))
 (add-hook 'js-mode-hook 'js2-minor-mode)
+(add-hook 'js-mode-hook 'eglot-ensure)
 (setq js2-highlight-level 3)
 (setq js-indent-level 2)
 
@@ -290,6 +292,13 @@
 (require 'eglot)
 (add-hook 'elixir-mode-hook 'eglot-ensure)
 (add-to-list 'eglot-server-programs '(elixir-mode "~/Projects/opensource/elixir-ls/release/language_server.sh"))
+
+(require 'dap-elixir)
+(dap-ui-mode)
+(dap-mode)
+
+(add-to-list 'load-path "~/Projects/opensource/exunit.el")
+(require 'exunit)
 
 (add-hook 'prog-mode-hook 'rainbow-mode)
 
