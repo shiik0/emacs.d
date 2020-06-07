@@ -34,6 +34,7 @@ mode to help me organize all of the configuration needed
                         company
                         dap-mode
                         dashboard
+                        deft
                         dired-subtree
                         dired-narrow
                         diminish
@@ -893,13 +894,11 @@ to display VIM shortcuts also.
   (setq org-log-done t)
 #+END_SRC
 
-** Plain Lists
-
-Allow ‘a.’, ‘A.’, ‘a)’ and ‘A) as list elements:
-
-#+BEGIN_SRC emacs-lisp
-  (setq org-list-allow-alphabetical t)
-#+END_SRC
+** Deft Configurations
+  #+BEGIN_SRC emacs-lisp
+    (setq deft-extensions '("org", "txt"))
+    (setq deft-directory "~/Documents/org/")
+  #+END_SRC
 
 ** Language support for org mode
 

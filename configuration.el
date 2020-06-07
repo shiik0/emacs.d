@@ -16,6 +16,7 @@
                       company
                       dap-mode
                       dashboard
+                      deft
                       dired-subtree
                       dired-narrow
                       diminish
@@ -415,7 +416,8 @@
 (define-key global-map "\C-ca" 'org-agenda)
 (setq org-log-done t)
 
-(setq org-list-allow-alphabetical t)
+(setq deft-extensions '("org", "txt"))
+(setq deft-directory "~/Documents/org/")
 
 (org-babel-do-load-languages
 'org-babel-load-languages
