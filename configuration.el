@@ -308,6 +308,8 @@
 (add-to-list 'auto-mode-alist '("\\.erb?\\'" . web-mode))
 ;; JSON
 (add-to-list 'auto-mode-alist '("\\.json?\\'" . web-mode))
+;; Svelte
+(add-to-list 'auto-mode-alist '("\\.svelte?\\'" . web-mode))
 
 (setq web-mode-enable-current-element-highlight t)
 (setq web-mode-ac-sources-alist
