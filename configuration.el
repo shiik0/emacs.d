@@ -274,7 +274,15 @@
   (eldoc-mode +1)
   (tide-hl-identifier-mode +1))
 
+(add-hook 'before-save-hook 'tide-format-before-save)
 (add-hook 'rjsx-mode-hook #'setup-tide-mode)
+
+;;TSX support
+(add-to-list 'auto-mode-alist '("\\.tsx?\\'" . web-mode))
+(add-hook 'web-mode-hook
+        (lambda ()
+          (when (string-equal "tsx" (file-name-extension buffer-file-name))
+            (setup-tide-mode))))
 
 (add-to-list 'auto-mode-alist '("components\\/.*\\.js\\'" . rjsx-mode))
 
@@ -310,8 +318,6 @@
 (add-to-list 'auto-mode-alist '("\\.json?\\'" . web-mode))
 ;; Svelte
 (add-to-list 'auto-mode-alist '("\\.svelte?\\'" . web-mode))
-;; TSX
-(add-to-list 'auto-mode-alist '("\\.tsx?\\'" . web-mode))
 
 (setq web-mode-enable-current-element-highlight t)
 (setq web-mode-ac-sources-alist
