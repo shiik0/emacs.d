@@ -474,10 +474,31 @@
 
 (load "~/.emacs.d/elfeed-feeds.el")
 
-(setq ORG-DIRECtORY "~/Documents/org/")
 (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
 
-(setq org-list-allow-alphabetical t)
+(setq org-directory "~/Library/Mobile Documents/iCloud~com~appsonthemove~beorg/Documents/org")
+    (setq org-default-notes-file "~/Library/Mobile Documents/iCloud~com~appsonthemove~beorg/Documents/org/refile.org")
+    ;; Use C-c c to start capture mode
+    (global-set-key (kbd "C-c c") 'org-capture)
+
+    ;; Capture templates for: TODO tasks, Notes, appointments, phone calls, meetings, and org-protocol
+(setq org-capture-templates
+      (quote (("t" "todo" entry (file "~/Library/Mobile Documents/iCloud~com~appsonthemove~beorg/Documents/org/refile.org")
+               "* TODO %?\n%U\n%a\n" :clock-in t :clock-resume t)
+              ("r" "respond" entry (file "~/Library/Mobile Documents/iCloud~com~appsonthemove~beorg/Documents/org/refile.org")
+               "* NEXT Respond to %:from on %:subject\nSCHEDULED: %t\n%U\n%a\n" :clock-in t :clock-resume t :immediate-finish t)
+              ("n" "note" entry (file "~/Library/Mobile Documents/iCloud~com~appsonthemove~beorg/Documents/org/refile.org")
+               "* %? :NOTE:\n%U\n%a\n" :clock-in t :clock-resume t)
+              ("j" "Journal" entry (file+datetree "~/Library/Mobile Documents/iCloud~com~appsonthemove~beorg/Documents/org/journal.org")
+               "* %?\n%U\n" :clock-in t :clock-resume t)
+              ("p" "projects" entry (file "~/Library/Mobile Documents/iCloud~com~appsonthemove~beorg/Documents/org/projects.org")
+               "* TODO Review %c\n%U\n" :immediate-finish t)
+              ("m" "Meeting" entry (file "~/Library/Mobile Documents/iCloud~com~appsonthemove~beorg/Documents/org/refile.org")
+               "* MEETING with %? :MEETING:\n%U" :clock-in t :clock-resume t)
+              ("p" "Phone call" entry (file "~/Library/Mobile Documents/iCloud~com~appsonthemove~beorg/Documents/org/refile.org")
+               "* PHONE %? :PHONE:\n%U" :clock-in t :clock-resume t)
+              ("h" "Habit" entry (file "~/Library/Mobile Documents/iCloud~com~appsonthemove~beorg/Documents/org/refile.org")
+               "* NEXT %?\n%U\n%a\nSCHEDULED: %(format-time-string \"%<<%Y-%m-%d %a .+1d/3d>>\")\n:PROPERTIES:\n:STYLE: habit\n:REPEAT_TO_STATE: NEXT\n:END:\n"))))
 
 (org-babel-do-load-languages
 'org-babel-load-languages
@@ -491,9 +512,27 @@
  (add-hook 'org-mode-hook 'auto-fill-mode)
 
 (setq org-todo-keywords
-          '((sequence "TODO" "|" "DONE")
-            (sequence "PROJECT" "AGENDA" "|" "MINUTES")
-            (sequence "WAITING" "|" "PROGRESS")))
+      (quote ((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d)")
+              (sequence "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)" "PHONE" "MEETING"))))
+
+(setq org-todo-keyword-faces
+      (quote (("TODO" :foreground "red" :weight bold)
+              ("NEXT" :foreground "blue" :weight bold)
+              ("DONE" :foreground "forest green" :weight bold)
+              ("WAITING" :foreground "orange" :weight bold)
+              ("HOLD" :foreground "magenta" :weight bold)
+              ("CANCELLED" :foreground "forest green" :weight bold)
+              ("MEETING" :foreground "forest green" :weight bold)
+              ("PHONE" :foreground "forest green" :weight bold))))
+
+(setq org-todo-state-tags-triggers
+      (quote (("CANCELLED" ("CANCELLED" . t))
+              ("WAITING" ("WAITING" . t))
+              ("HOLD" ("WAITING") ("HOLD" . t))
+              (done ("WAITING") ("HOLD"))
+              ("TODO" ("WAITING") ("CANCELLED") ("HOLD"))
+              ("NEXT" ("WAITING") ("CANCELLED") ("HOLD"))
+              ("DONE" ("WAITING") ("CANCELLED") ("HOLD")))))
 
 (setq org-duration-format 'h:mm)
 
