@@ -14,6 +14,7 @@
                       browse-kill-ring
                       comment-tags
                       company
+                      company-lsp
                       dap-mode
                       dashboard
                       deft
@@ -23,7 +24,6 @@
                       doom-modeline
                       dumb-jump
                       editorconfig
-                      eglot
                       elfeed
                       elfeed-goodies
                       elixir-mode
@@ -46,6 +46,8 @@
                       ghub
                       hide-mode-line
                       hydra
+                      lsp-mode
+                      lsp-ui
                       ido-vertical-mode
                       impatient-mode
                       ini-mode
@@ -294,23 +296,83 @@
 (setq js2-highlight-level 3)
 (setq js-indent-level 2)
 
-(add-hook 'rust-mode-hook 'eglot-ensure)
-(add-hook 'rust-mode-hook #'flycheck-rust-setup)
+(require 'company-lsp)
+(push 'company-lsp company-backends)
 
-(require 'eglot)
-(add-to-list 'eglot-server-programs '((c-mode) "clangd"))
-(add-hook 'c-mode-hook 'eglot-ensure)
+(use-package lsp-mode
+  :diminish (lsp-mode . "lsp")
+  :bind (:map lsp-mode-map
+        ("C-c C-d" . lsp-describe-thing-at-point))
+  :hook ((rust-mode . #'lsp-deferred)
+         (c-mode . #'lsp-deferred)
+         (elixir-mode . #'lsp-deferred))
+  :init (setq lsp-auto-guess-root t       ; Detect project root
+              lsp-log-io nil
+              lsp-enable-indentation t
+              lsp-enable-imenu t
+              lsp-keymap-prefix "C-l"
+              lsp-file-watch-threshold 500
+              lsp-prefer-flymake nil)      ; Use lsp-ui and flycheck
 
-(require 'eglot)
-(add-hook 'elixir-mode-hook 'eglot-ensure)
-(add-to-list 'eglot-server-programs '(elixir-mode "~/Projects/opensource/elixir-ls/release/language_server.sh"))
+        (defun lsp-on-save-operation ()
+            (when (or (boundp 'lsp-mode)
+              (bound-p 'lsp-deferred))
+              (lsp-organize-imports)
+              (lsp-format-buffer))))
 
-(require 'dap-elixir)
-(dap-ui-mode)
-(dap-mode)
+(use-package lsp-ui
+  :ensure t
+  :after (lsp-mode)
+  :commands lsp-ui-doc-hide
+  :bind (:map lsp-ui-mode-map
+     ([remap xref-find-definitions] . lsp-ui-peek-find-definitions)
+     ([remap xref-find-references] . lsp-ui-peek-find-references)
+     ("C-c u" . lsp-ui-imenu))
+  :init (setq lsp-ui-doc-enable t
+     lsp-ui-doc-use-webkit nil
+     lsp-ui-doc-header nil
+     lsp-ui-doc-delay 0.2
+     lsp-ui-doc-include-signature t
+     lsp-ui-doc-alignment 'at-point
+     lsp-ui-doc-use-childframe nil
+     lsp-ui-doc-border (face-foreground 'default)
+     lsp-ui-peek-enable t
+     lsp-ui-peek-show-directory t
+     lsp-ui-sideline-update-mode 'line
+     lsp-ui-sideline-enable t
+     lsp-ui-sideline-show-code-actions t
+     lsp-ui-sideline-show-hover nil
+     lsp-ui-sideline-ignore-duplicate t)
+  :config
+     (add-to-list 'lsp-ui-doc-frame-parameters '(right-fringe . 8))
 
-(add-to-list 'load-path "~/Projects/opensource/exunit.el")
-(require 'exunit)
+   ;; `C-g'to close doc
+   (advice-add #'keyboard-quit :before #'lsp-ui-doc-hide)
+
+   ;; Reset `lsp-ui-doc-background' after loading theme
+   (add-hook 'after-load-theme-hook
+   (lambda ()
+     (setq lsp-ui-doc-border (face-foreground 'default))
+     (set-face-background 'lsp-ui-doc-background
+                          (face-background 'tooltip))))
+
+    ;; WORKAROUND Hide mode-line of the lsp-ui-imenu buffer
+    ;; @see https://github.com/emacs-lsp/lsp-ui/issues/243
+    (defadvice lsp-ui-imenu (after hide-lsp-ui-imenu-mode-line activate)
+      (setq mode-line-format nil)))
+
+  ;; Debug
+  (use-package dap-mode
+    :diminish dap-mode
+    :ensure t
+    :after (lsp-mode)
+    :functions dap-hydra/nil
+    :bind (:map lsp-mode-map
+       ("<f5>" . dap-debug)
+       ("M-<f5>" . dap-hydra))
+    :hook ((dap-mode . dap-ui-mode)
+      (dap-session-created . (lambda (&_rest) (dap-hydra)))
+      (dap-terminated . (lambda (&_rest) (dap-hydra/nil)))))
 
 (add-hook 'prog-mode-hook 'rainbow-mode)
 
@@ -450,15 +512,7 @@
 
 (setq org-duration-format 'h:mm)
 
-(custom-set-variables
-    '(pdf-tools-handle-upgrades nil))
 
-(setq pdf-info-epdfinfo-program "/usr/local/bin/epdfinfo")
-
-(evil-set-initial-state 'pdf-view-mode 'emacs)
-(add-hook 'pdf-view-mode-hook
-  (lambda ()
-    (set (make-local-variable 'evil-emacs-state-cursor) (list nil))))
 
 (require 'elfeed)
 (require 'elfeed-goodies)
@@ -475,6 +529,12 @@
 (load "~/.emacs.d/elfeed-feeds.el")
 
 (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
+
+;; Do not dim blocked tasks
+(setq org-agenda-dim-blocked-tasks nil)
+
+;; Compact the block agenda view
+(setq org-agenda-compact-blocks t)
 
 (setq org-directory "~/Library/Mobile Documents/iCloud~com~appsonthemove~beorg/Documents/org")
     (setq org-default-notes-file "~/Library/Mobile Documents/iCloud~com~appsonthemove~beorg/Documents/org/refile.org")
@@ -536,15 +596,7 @@
 
 (setq org-duration-format 'h:mm)
 
-(custom-set-variables
-    '(pdf-tools-handle-upgrades nil))
 
-(setq pdf-info-epdfinfo-program "/usr/local/bin/epdfinfo")
-
-(evil-set-initial-state 'pdf-view-mode 'emacs)
-(add-hook 'pdf-view-mode-hook
-  (lambda ()
-    (set (make-local-variable 'evil-emacs-state-cursor) (list nil))))
 
 (require 'elfeed)
 (require 'elfeed-goodies)
