@@ -32,7 +32,6 @@ mode to help me organize all of the configuration needed
                         browse-kill-ring
                         comment-tags
                         company
-                        company-lsp
                         dap-mode
                         dashboard
                         deft
@@ -64,8 +63,6 @@ mode to help me organize all of the configuration needed
                         ghub
                         hide-mode-line
                         hydra
-                        lsp-mode
-                        lsp-ui
                         ido-vertical-mode
                         impatient-mode
                         ini-mode
